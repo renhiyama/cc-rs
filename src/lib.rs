@@ -1423,13 +1423,21 @@ impl Build {
             }
         }
 
-        let (lib_name, gnu_lib_name) = if output.starts_with("lib") && output.ends_with(".a") {
-            (&output[3..output.len() - 2], output.to_owned())
+        // Determine static library suffix based on target OS
+        let static_suffix = if let Ok(ref target) = self.get_target() {
+            if target.os == "runixos" { ".ral" } else { ".a" }
+        } else {
+            ".a"
+        };
+
+        let (lib_name, gnu_lib_name) = if output.starts_with("lib") && (output.ends_with(".a") || output.ends_with(".ral")) {
+            let suffix_len = if output.ends_with(".ral") { 4 } else { 2 };
+            (&output[3..output.len() - suffix_len], output.to_owned())
         } else {
             let mut gnu = String::with_capacity(5 + output.len());
             gnu.push_str("lib");
             gnu.push_str(output);
-            gnu.push_str(".a");
+            gnu.push_str(static_suffix);
             (output, gnu)
         };
         let dst = self.get_out_dir()?;
