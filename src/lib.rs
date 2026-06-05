@@ -1423,9 +1423,10 @@ impl Build {
             }
         }
 
-        // Determine static library suffix based on target OS
+        // RunixOS uses .ral for static libraries. RunixOS is a Linux gnu target
+        // distinguished by its environment, so key on env, not os.
         let static_suffix = if let Ok(ref target) = self.get_target() {
-            if target.os == "runixos" { ".ral" } else { ".a" }
+            if target.env == "runixos" { ".ral" } else { ".a" }
         } else {
             ".a"
         };

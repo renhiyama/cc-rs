@@ -222,6 +222,9 @@ fn parse_envabi(last_component: &str) -> Option<(&str, &str)> {
         "sgx" => ("sgx", ""),
         "threads" => ("threads", ""),
         "mlibc" => ("mlibc", ""),
+        // RunixOS: a glibc-based Linux userland. The environment names the
+        // userland; the ABI is gnu, so compiler behaviour follows the gnu path.
+        "runixos" => ("runixos", ""),
 
         // ABIs
         "abi64" => ("", "abi64"),
